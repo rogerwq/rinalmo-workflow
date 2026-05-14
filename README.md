@@ -33,8 +33,4 @@ GCGGAUUUAGCUCAGUUGGGAGAGCGCCAGACUGAAGAUCUGGAGGUCCUGUGUUCGAUCCACAGAAUUCGCA
 
 ## Weights
 
-Fine-tuned weights (~2.5 GB) are downloaded automatically on first run to `/weights/` inside the container. Mount a host directory for persistence:
-
-```bash
-docker run --gpus all -v /path/to/weights:/weights rinalmo:2026_05_14 ...
-```
+Fine-tuned bpRNA weights (~2.5 GB) are baked into the Docker image at `/weights/rinalmo_giga_ss_bprna_ft.pt`. No download at runtime.

@@ -1,8 +1,6 @@
 import os
 import sys
 import shutil
-import urllib.request
-from pathlib import Path
 
 import numpy as np
 import torch
@@ -15,22 +13,10 @@ from rinalmo.config import model_config
 from rinalmo.data.alphabet import Alphabet
 from rinalmo.utils.sec_struct import prob_mat_to_sec_struct
 
-IN_DIR   = "inputs"
-OUT_DIR  = "outputs"
+IN_DIR     = "inputs"
+OUT_DIR    = "outputs"
+CHECKPOINT = "/weights/rinalmo_giga_ss_bprna_ft.pt"
 os.makedirs(OUT_DIR, exist_ok=True)
-
-WEIGHTS_DIR = Path("/weights")
-WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
-CHECKPOINT  = WEIGHTS_DIR / "rinalmo_giga_ss_bprna_ft.pt"
-ZENODO_URL  = "https://zenodo.org/records/15043668/files/rinalmo_giga_ss_bprna_ft.pt"
-
-# --- download weights if not cached ---
-if not CHECKPOINT.exists():
-    print(f"Downloading fine-tuned weights (~2.5 GB) to {CHECKPOINT} ...")
-    urllib.request.urlretrieve(ZENODO_URL, CHECKPOINT)
-    print("Download complete.")
-else:
-    print(f"Using cached weights at {CHECKPOINT}")
 
 # --- load input sequence ---
 fasta_path = os.path.join(IN_DIR, "sequence.fasta")
