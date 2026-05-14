@@ -1,0 +1,6 @@
+name = "RNA Secondary Structure Prediction (RiNALMo)"
+description = "Predicts RNA secondary structure from a FASTA sequence using the RiNALMo 650M language model with bpRNA fine-tuned weights"
+
+[dependencies]
+01-predict = ["00-input"]
+02-report  = ["01-predict"]

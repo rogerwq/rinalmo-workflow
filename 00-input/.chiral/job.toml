@@ -1,0 +1,9 @@
+name = "Validate Input FASTA"
+description = "Validates the user-supplied RNA FASTA file and passes it to the prediction node"
+outputs = ["sequence.fasta"]
+
+[container]
+image = "rinalmo:2026_05_14"
+
+[scripts]
+run = "run.sh"

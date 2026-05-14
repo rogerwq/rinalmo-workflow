@@ -1,0 +1,10 @@
+name = "Generate Report"
+description = "Generates an HTML report with an arc diagram of the predicted RNA secondary structure"
+inputs  = ["sequence.fasta", "structure.dbn", "contact_map.npy"]
+outputs = ["report.html"]
+
+[container]
+image = "rinalmo:2026_05_14"
+
+[scripts]
+run = "run.sh"

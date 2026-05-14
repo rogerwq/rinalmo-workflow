@@ -1,0 +1,10 @@
+name = "Predict Secondary Structure"
+description = "Downloads RiNALMo bpRNA fine-tuned weights and predicts RNA secondary structure as a contact map and dot-bracket string"
+inputs  = ["sequence.fasta"]
+outputs = ["sequence.fasta", "structure.dbn", "contact_map.npy"]
+
+[container]
+image = "rinalmo:2026_05_14"
+
+[scripts]
+run = "run.sh"
