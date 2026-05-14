@@ -24,27 +24,28 @@ record = next(SeqIO.parse(fasta_path, "fasta"))
 seq = str(record.seq).upper()
 print(f"Sequence: {record.id} ({len(seq)} nt)")
 
-# --- reconstruct model from Lightning checkpoint ---
+# --- reconstruct model from checkpoint ---
+# The saved file is a flat OrderedDict: keys lm.*, pred_head.*, threshold
 print("Loading model...")
-ckpt = torch.load(CHECKPOINT, map_location="cpu")
-hparams       = ckpt.get("hyper_parameters", {})
-lm_cfg_name   = hparams.get("lm_config", "giga")
-num_blocks    = hparams.get("num_resnet_blocks", 2)
-threshold     = float(ckpt.get("callbacks", {}).get("threshold", 0.5))
+ckpt      = torch.load(CHECKPOINT, map_location="cpu")
+threshold = float(ckpt.get("threshold", 0.5))
 
-config    = model_config(lm_cfg_name)
+if not torch.cuda.is_available():
+    print("ERROR: RiNALMo requires a CUDA GPU. No GPU detected.")
+    sys.exit(1)
+device = torch.device("cuda:0")
+print(f"Running on: {device}")
+
+config = model_config("giga")
 embed_dim = config["model"]["transformer"]["embed_dim"]
 alphabet  = Alphabet(**config["alphabet"])
 
 lm        = RiNALMo(config)
-pred_head = SecStructPredictionHead(embed_dim, num_blocks=num_blocks)
+pred_head = SecStructPredictionHead(embed_dim, num_blocks=2)
 
-state = ckpt["state_dict"]
-lm.load_state_dict({k[3:]: v for k, v in state.items() if k.startswith("lm.")})
-pred_head.load_state_dict({k[10:]: v for k, v in state.items() if k.startswith("pred_head.")})
+lm.load_state_dict({k[3:]: v for k, v in ckpt.items() if k.startswith("lm.")})
+pred_head.load_state_dict({k[10:]: v for k, v in ckpt.items() if k.startswith("pred_head.")})
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(f"Running on: {device}")
 lm.to(device).eval()
 pred_head.to(device).eval()
 
