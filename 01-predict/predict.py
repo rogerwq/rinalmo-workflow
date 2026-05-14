@@ -46,16 +46,15 @@ pred_head = SecStructPredictionHead(embed_dim, num_blocks=2)
 lm.load_state_dict({k[3:]: v for k, v in ckpt.items() if k.startswith("lm.")})
 pred_head.load_state_dict({k[10:]: v for k, v in ckpt.items() if k.startswith("pred_head.")})
 
-lm.to(device).half().eval()
-pred_head.to(device).half().eval()
+lm.to(device).eval()
+pred_head.to(device).eval()
 
 # --- inference ---
 tokens = torch.tensor(alphabet.batch_tokenize([seq]), dtype=torch.int64, device=device)
-with torch.no_grad():
+with torch.no_grad(), torch.autocast(device_type="cuda", dtype=torch.float16):
     rep    = lm(tokens)["representation"]          # B x (L+2) x E
     logits = pred_head(rep[..., 1:-1, :])          # B x L x L
-    probs  = torch.sigmoid(logits).squeeze(0).float()  # L x L, cast to fp32 for numpy
-    probs  = probs.cpu().numpy()
+    probs  = torch.sigmoid(logits).squeeze(0).float().cpu().numpy()  # L x L, fp32
 
 # symmetrize (should already be symmetric, but ensure)
 probs = (probs + probs.T) / 2.0
