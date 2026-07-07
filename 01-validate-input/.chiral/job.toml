@@ -1,5 +1,6 @@
 name = "Validate Input FASTA"
-description = "Validates the user-supplied RNA FASTA file and passes it to the prediction node"
+description = "Validates the prepared RNA FASTA file and passes it to the prediction node"
+inputs  = ["sequence.fasta"]
 outputs = ["sequence.fasta"]
 
 [container]
