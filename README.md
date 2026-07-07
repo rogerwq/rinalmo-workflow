@@ -8,13 +8,14 @@ Predicts RNA secondary structure from a single FASTA sequence using the [RiNALMo
 
 | # | Node | Description |
 |---|------|-------------|
-| 00 | Validate Input | Validates FASTA, normalises T→U, enforces 1022 nt limit |
-| 01 | Predict Structure | Downloads weights, runs RiNALMo, outputs contact map + dot-bracket |
-| 02 | Report | Arc diagram HTML report |
+| 00 | Prepare Input | Uses `input_files/sequence.fasta` if present, otherwise falls back to a bundled example sequence |
+| 01 | Validate Input | Validates FASTA, normalises T→U, enforces 1022 nt limit |
+| 02 | Predict Structure | Downloads weights, runs RiNALMo, outputs contact map + dot-bracket |
+| 03 | Report | Arc diagram HTML report |
 
 ## Input
 
-Place your RNA sequence as `input_files/sequence.fasta` before running:
+Place your RNA sequence as `input_files/sequence.fasta` before running (optional — a bundled example sequence is used if it's missing):
 
 ```
 >my_rna

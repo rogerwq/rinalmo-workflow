@@ -1,0 +1,9 @@
+name = "Prepare Input"
+description = "Uses the user-supplied FASTA from input_files/ if present, otherwise falls back to a bundled example RNA sequence"
+outputs = ["sequence.fasta"]
+
+[container]
+image = "rinalmo:2026_05_14"
+
+[scripts]
+run = "run.sh"
